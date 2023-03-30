@@ -7,7 +7,6 @@ function CreatePost() {
   const [title, setTitle] = useState("")
   const [body, setBody] = useState("")
   const [image, setImage] = useState("")
-  const [url, setUrl] = useState("")
   const uploadImage = () => {
     if (!title || !body || !image) {
       M.toast({ html: "All Fields Are Mandatory" })
@@ -24,17 +23,16 @@ function CreatePost() {
         .then(response => response.json())
         .then(result => {
           if (result.url) {
-            setUrl(result.url);
-            console.log(result.url)
             fetch("/createPost", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                "Authorization":"Bearer"+localStorage.getItem("token")
               },
               body: JSON.stringify({
                 title,
                 body,
-                photo: url
+                photo: result.url
               })
             }).then(res => res.json()).then(data => {
               if (data.error) {
