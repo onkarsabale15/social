@@ -22,6 +22,8 @@ function Login() {
         if (data.error) {
           M.toast({ html: data.error })
         } else {
+          localStorage.setItem("token",data.token)
+          localStorage.setItem("user",JSON.stringify(data.user))
           M.toast({ html: data.message })
           navi('/')
         }
