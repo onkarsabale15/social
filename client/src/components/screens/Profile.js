@@ -1,6 +1,17 @@
-import React from 'react'
-
+import React, { useContext, useEffect, useState } from 'react'
+import { UserContext } from '../../App'
 function Profile() {
+  const {state}=useContext(UserContext)
+  const [myPosts, setMyPosts] = useState([])
+  useEffect(() => {
+    fetch("/myPosts", {
+      headers: {
+        "Authorization": "Bearer" + localStorage.getItem("token")
+      }
+    }).then(res => res.json()).then(result => {
+      setMyPosts(result)
+    })
+  },[])
   return (
     <div>
       <div style={{
@@ -24,7 +35,7 @@ function Profile() {
           alignItems:"center"
         }}>
           <h4>
-            User Profile
+            {state?state.name:"Loading.."}
           </h4>
           <div style={{
               display: "flex",
@@ -37,14 +48,12 @@ function Profile() {
         </div>
       </div>
       <div className='gallery'>
-        <img className='galleryItem' src='http://cdn.onlinewebfonts.com/svg/img_295464.png' alt='cant load post'/>
-        <img className='galleryItem' src='http://cdn.onlinewebfonts.com/svg/img_295464.png' alt='cant load post'/>
-        <img className='galleryItem' src='http://cdn.onlinewebfonts.com/svg/img_295464.png' alt='cant load post'/>
-        <img className='galleryItem' src='http://cdn.onlinewebfonts.com/svg/img_295464.png' alt='cant load post'/>
-        <img className='galleryItem' src='http://cdn.onlinewebfonts.com/svg/img_295464.png' alt='cant load post'/>
-        <img className='galleryItem' src='http://cdn.onlinewebfonts.com/svg/img_295464.png' alt='cant load post'/>
-        <img className='galleryItem' src='http://cdn.onlinewebfonts.com/svg/img_295464.png' alt='cant load post'/>
-        
+        {myPosts.map(post=>{
+          // console.log(post.photo)
+          return (
+            <img key={post._id} className='galleryItem' src={post.photo} alt='cant load post'/>
+          )
+        })}
       </div>
     </div>
   )

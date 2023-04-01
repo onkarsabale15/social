@@ -35,6 +35,22 @@ router.post("/createPost", requireLogin, (req, res) => {
     }
 })
 
+router.put("/comment", requireLogin,(req,res)=>{
+    const comment = {
+        text:req.body.text,
+        postedBy:req.user
+    }
+    postModel.findByIdAndUpdate(req.body.postId,{
+        $push:{comments:comment}
+    },{new:true}).exec((err,result)=>{
+        if(err){
+            return res.status(422).json({error:err})
+        }else{
+            res.json(result)
+        }
+    })
+})
+
 router.get("/myPosts", requireLogin, (req, res) => {
     postModel.find({ postedBy: req.user })
         .populate("postedBy", "_id name")

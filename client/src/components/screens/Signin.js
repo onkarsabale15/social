@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import M from 'materialize-css'
+import { UserContext } from '../../App'
+
 function Login() {
+  const { state, dispatch } = useContext(UserContext)
   const navi = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -22,8 +25,9 @@ function Login() {
         if (data.error) {
           M.toast({ html: data.error })
         } else {
-          localStorage.setItem("token",data.token)
-          localStorage.setItem("user",JSON.stringify(data.user))
+          localStorage.setItem("token", data.token)
+          localStorage.setItem("user", JSON.stringify(data.user))
+          dispatch({ type: "USER", payload: data.user })
           M.toast({ html: data.message })
           navi('/')
         }
