@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { UserContext } from '../../App'
+
+
 
 function Home() {
+  const { state } = useContext(UserContext)
   const [data, setData] = useState([])
   useEffect(() => {
     fetch("/allposts", {
@@ -20,9 +24,39 @@ function Home() {
         "Authorization": "Bearer" + localStorage.getItem("token")
       },
       body: JSON.stringify({
-        postId:id,
+        postId: id,
       })
-    }).then(res=>res.json()).then(data=>console.log(data))
+    }).then(res => res.json()).then(data => { return data.likes })
+  }
+
+  const unLikePost = (id) => {
+    fetch('/unLike', {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer" + localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        postId: id,
+      })
+    }).then(res => res.json()).then(data => { return data.likes })
+  }
+
+  const likeOrUnlike = (ur,id) => {
+    if (ur.includes(state._id)) {
+      return unLikePost(id);
+    } else {
+      return likePost(id);
+    }
+
+  }
+
+  function checkUserLike(ur) {
+    if (ur.includes(state._id)) {
+      return "favorite";
+    } else {
+      return "favorite_border";
+    }
   }
   return (
     <div className='home'>
@@ -34,9 +68,9 @@ function Home() {
               <img src={item.photo} alt='Cant Load The Post' />
             </div>
             <div className='card-content'>
-              <i onClick={()=>{
-                likePost(item._id)
-              }} className="material-icons" style={{ color: "red", cursor: "pointer" }}>favorite_border</i>
+              <i onClick={() => {
+                item.likes = likeOrUnlike(item.likes,item._id)
+              }} className="material-icons" style={{ color: "red", cursor: "pointer" }}>{checkUserLike(item.likes)}</i>
               <span style={{ textAlign: "center" }}> <b>{item.likes.length} Likes</b></span>
               <h6>{item.title}</h6>
               <p>{item.body}</p>

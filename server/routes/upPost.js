@@ -50,6 +50,20 @@ router.put('/like', requireLogin, async (req, res) => {
   });
 
 
+  router.put('/unLike', requireLogin, async (req, res) => {
+    try {
+      const post = await postModel.findByIdAndUpdate(req.body.postId, {
+        $pull: { likes: req.user._id }
+      }, {
+        new: true
+      });
+      res.json(post);
+    } catch (error) {
+      res.status(422).json({ error: error.message });
+    }
+  });
+
+
 //   router.put('/comment', requireLogin, async (req, res) => {
 //     const comment = {
 //       text: req.body.text,
