@@ -17,7 +17,7 @@ function Home() {
     })
   }, [])
   const likePost = (id) => {
-    fetch('/like', {
+    return fetch('/like', {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -26,11 +26,11 @@ function Home() {
       body: JSON.stringify({
         postId: id,
       })
-    }).then(res => res.json()).then(data => { return data.likes })
-  }
-
+    }).then(res => res.json())
+  };
+  
   const unLikePost = (id) => {
-    fetch('/unLike', {
+    return fetch('/unLike', {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -39,25 +39,35 @@ function Home() {
       body: JSON.stringify({
         postId: id,
       })
-    }).then(res => res.json()).then(data => { return data.likes })
-  }
+    }).then(res => res.json())
+  };  
 
-  const likeOrUnlike = (ur,id) => {
-    if (ur.includes(state._id)) {
-      return unLikePost(id);
+  const likeOrUnlike = (likes, id) => {
+    if (likes.includes(state._id)) {
+      unLikePost(id).then(data => {
+        setData(prevData => {
+          const updatedData = [...prevData];
+          const postIndex = updatedData.findIndex(post => post._id === id);
+          updatedData[postIndex].likes = data.likes;
+          return updatedData;
+        });
+      });
     } else {
-      return likePost(id);
+      likePost(id).then(data => {
+        setData(prevData => {
+          const updatedData = [...prevData];
+          const postIndex = updatedData.findIndex(post => post._id === id);
+          updatedData[postIndex].likes = data.likes;
+          return updatedData;
+        });
+      });
     }
+  };  
+  
+  
+  
 
-  }
 
-  function checkUserLike(ur) {
-    if (ur.includes(state._id)) {
-      return "favorite";
-    } else {
-      return "favorite_border";
-    }
-  }
   return (
     <div className='home'>
       {data.map(item => {
@@ -68,9 +78,7 @@ function Home() {
               <img src={item.photo} alt='Cant Load The Post' />
             </div>
             <div className='card-content'>
-              <i onClick={() => {
-                item.likes = likeOrUnlike(item.likes,item._id)
-              }} className="material-icons" style={{ color: "red", cursor: "pointer" }}>{checkUserLike(item.likes)}</i>
+              <i onClick={() => likeOrUnlike(item.likes, item._id)} className="material-icons" style={{ color: "red", cursor: "pointer" }}>{(item.likes).includes(state._id) ? "favorite" : "favorite_border"}</i>
               <span style={{ textAlign: "center" }}> <b>{item.likes.length} Likes</b></span>
               <h6>{item.title}</h6>
               <p>{item.body}</p>
@@ -82,5 +90,7 @@ function Home() {
     </div>
   )
 }
+
+
 
 export default Home
