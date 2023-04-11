@@ -64,20 +64,20 @@ router.put('/like', requireLogin, async (req, res) => {
   });
 
 
-//   router.put('/comment', requireLogin, async (req, res) => {
-//     const comment = {
-//       text: req.body.text,
-//       postedBy: req.user
-//     };
-//     try {
-//       const post = await postModel.findByIdAndUpdate(req.body.postId, {
-//         $push: { comments: comment }
-//       }, { new: true });
-//       res.json(post);
-//     } catch (error) {
-//       res.status(422).json({ error: error.message });
-//     }
-//   });
+  router.put('/comment', requireLogin, async (req, res) => {
+    const comment = {
+      text: req.body.text,
+      postedBy: req.user
+    };
+    try {
+      const post = await postModel.findByIdAndUpdate(req.body.postId, {
+        $push: { comments: comment }
+      }, { new: true });
+      res.json(post);
+    } catch (error) {
+      res.status(422).json({ error: error.message });
+    }
+  });
   
 
 router.get("/myPosts", requireLogin, (req, res) => {

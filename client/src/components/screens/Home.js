@@ -12,7 +12,6 @@ function Home() {
         "Authorization": "Bearer" + localStorage.getItem("token")
       }
     }).then(res => res.json()).then(result => {
-      console.log(result)
       setData(result)
     })
   }, [])
@@ -90,7 +89,4 @@ function Home() {
     </div>
   )
 }
-
-
-
 export default Home
