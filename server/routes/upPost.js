@@ -67,6 +67,7 @@ router.put('/like', requireLogin, async (req, res) => {
   router.put('/comment', requireLogin, async (req, res) => {
     const comment = {
       text: req.body.text,
+      name:req.body.name,
       postedBy: req.user
     };
     try {

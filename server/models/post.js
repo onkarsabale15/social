@@ -7,7 +7,7 @@ const { ObjectId } = mongoose.Schema.Types
 const postSchema = new mongoose.Schema({
     title: {
         type: String,
-        requird: true
+        required: true
     },
     body: {
         type: String,
@@ -20,6 +20,7 @@ const postSchema = new mongoose.Schema({
 
     comments: [{
         text: String,
+        name:String,
         postedBy: {
             type: ObjectId,
             ref: "User"
