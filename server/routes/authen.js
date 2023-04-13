@@ -10,6 +10,8 @@ router.get('/', requireLogin, (req, res) => {
     res.send("Home Page")
 });
 
+router.get("/getProfile")
+
 router.post('/signin', (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {

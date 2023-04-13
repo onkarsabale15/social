@@ -80,7 +80,7 @@ function Home() {
     .then(result=>{
       console.log(result)
       const newData = data.map(item=>{
-        if(item._id ==result._id){
+        if(item._id === result._id){
           return result
         }else{
           return item
@@ -99,7 +99,8 @@ function Home() {
       {data.map(item => {
         return (
           <div className='card home-card' key={item._id}>
-            <h5>{item.postedBy.name}</h5>
+            <span style={{cursor:"pointer", width:"Auto", fontWeight:"600", fontSize:"x-large"}}>{item.postedBy.name}</span>
+            
             <div className='card-image'>
               <img src={item.photo} alt='Cant Load The Post' />
             </div>

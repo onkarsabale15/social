@@ -1,17 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../App'
-function Profile() {
-  const { state } = useContext(UserContext)
-  const [myPosts, setMyPosts] = useState([])
-  useEffect(() => {
-    fetch("/myPosts", {
-      headers: {
-        "Authorization": "Bearer" + localStorage.getItem("token")
-      }
-    }).then(res => res.json()).then(result => {
-      setMyPosts(result);
-    })
-  }, [])
+import React from 'react'
+function User() {
   return (
     <div>
       <div style={{
@@ -35,28 +23,19 @@ function Profile() {
           alignItems: "center"
         }}>
           <h4>
-            {state ? state.name : "Loading.."}
+            {"Loading.."}
           </h4>
           <div style={{
             display: "flex",
             justifyContent: "space-evenly",
           }}>
-            <h6 style={{ margin: "2vh", cursor: "pointer" }}>{myPosts.length} Posts</h6>
+            <h6 style={{ margin: "2vh", cursor: "pointer" }}>NA Posts</h6>
             <h6 style={{ margin: "2vh", cursor: "pointer" }}>NA Followers</h6>
             <h6 style={{ margin: "2vh", cursor: "pointer" }}>NA Following</h6>
           </div>
         </div>
       </div>
-      <div className='gallery'>
-        {myPosts.message ? (
-          <h1>{myPosts.message}</h1>
-        ) : (
-          myPosts.map(post => (
-            <img key={post._id} className='galleryItem' src={post.photo} alt='cant load post' />
-          ))
-        )}
-      </div>
     </div>
   )
 }
-export default Profile
+export default User;
